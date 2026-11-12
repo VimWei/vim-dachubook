@@ -1,0 +1,105 @@
+*dachubook.txt*	Render Markdown notes to a printable PDF book
+
+			  DACHUBOOK REFERENCE MANUAL
+
+==============================================================================
+CONTENTS							*dachubook-contents*
+
+	1. Overview		|dachubook-overview|
+	2. Commands		|dachubook-commands|
+	3. Configuration	|dachubook-config|
+	4. Functions		|dachubook-functions|
+	5. Dependency		|dachubook-dependency|
+
+==============================================================================
+1. OVERVIEW							*dachubook-overview*
+
+vim-dachubook is a thin Vim wrapper around the external DachuBook CLI.  It
+takes the current Markdown file, builds a `dachubook build` command line and
+runs it, asynchronously when |AsyncRun| is available.  All Markdown parsing,
+layout and PDF generation happen in DachuBook; this plugin does not parse
+Markdown.
+
+==============================================================================
+2. COMMANDS							*dachubook-commands*
+
+							*:DachuBookPage*
+:DachuBookPage [{profile}]	Render the current file as a single-page PDF.
+				No cover or table of contents.
+
+							*:DachuBookTree*
+:DachuBookTree [{profile}]	Use the current file as the entry of a note tree
+				and render the whole book, with cover and
+				table of contents.
+
+Both commands write the buffer first, create the output directory when it is
+missing, and report progress with |:echomsg|.  The optional {profile} is either
+
+  - the name of a config file in the configuration directory, so that
+    `cookbook` means `~/.config/dachubook/cookbook.yaml`, or
+  - a path, used as-is (`:DachuBookTree ~/x.yaml`).
+
+Without an argument the default config `<config-dir>/config.yaml` is used, and
+it is created with `dachubook init` on first use.  The configuration directory
+is whatever `dachubook config-dir` prints (`~/.config/dachubook` by default).
+
+When the argument is empty, |dachubook#complete()| offers the `*.yaml` names
+found in the configuration directory (excluding `config`), followed by file
+name completion.
+
+The output file lives in the output directory (see |g:dachubook_output|).  Its
+name is decided by DachuBook: `output.name` from the config, otherwise the
+entry file name.  Two notes with the same file name therefore overwrite each
+other, so keep note names unique.
+
+==============================================================================
+3. CONFIGURATION						*dachubook-config*
+
+							*g:dachubook_cmd*
+g:dachubook_cmd		Name or path of the DachuBook executable.
+				Default: "dachubook"
+				Read on every run, so it can be changed at
+				any time.
+
+							*g:dachubook_output*
+g:dachubook_output	Output directory for the generated PDF.
+				Default: `{wiki_root}/.output`, where
+				|g:wiki_root| defaults to `~/wiki/`.  Set it
+				to override independently of |g:wiki_root|.
+
+Example: >
+	let g:dachubook_cmd = 'c:/tools/dachubook.exe'
+	let g:dachubook_output = '~/Dropbox/books'
+<
+The CLI must be run with the system code page rather than UTF-8 because Vim
+reads subprocess output in the system code page.  The plugin sets
+`DACHUBOOK_ANSI=1` for this (`set VAR=1 && ...` on Windows, `VAR=1 ...`
+elsewhere).
+
+==============================================================================
+4. FUNCTIONS						*dachubook-functions*
+
+							*dachubook#page()*
+dachubook#page([{profile}])
+		Same as |:DachuBookPage|.  {profile} is optional.
+
+							*dachubook#tree()*
+dachubook#tree([{profile}])
+		Same as |:DachuBookTree|.  {profile} is optional.
+
+							*dachubook#complete()*
+dachubook#complete({ArgLead}, {CmdLine}, {CursorPos})
+		Command-line completion for the commands above.  Returns the
+		profile names in the configuration directory plus file names.
+
+==============================================================================
+5. DEPENDENCY						*dachubook-dependency*
+
+DachuBook must be installed and on `$PATH`, normally with uv: >
+
+	uv tool install DachuBook
+<
+The layout runtime (Pango / GTK) is installed together with WeasyPrint by
+DachuBook.  See https://gitea.vimel.org/Vimel/DachuBook
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

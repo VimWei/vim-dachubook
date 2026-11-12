@@ -1,0 +1,14 @@
+:DachuBookPage	dachubook.txt	/*:DachuBookPage*
+:DachuBookTree	dachubook.txt	/*:DachuBookTree*
+dachubook#complete()	dachubook.txt	/*dachubook#complete()*
+dachubook#page()	dachubook.txt	/*dachubook#page()*
+dachubook#tree()	dachubook.txt	/*dachubook#tree()*
+dachubook-commands	dachubook.txt	/*dachubook-commands*
+dachubook-config	dachubook.txt	/*dachubook-config*
+dachubook-contents	dachubook.txt	/*dachubook-contents*
+dachubook-dependency	dachubook.txt	/*dachubook-dependency*
+dachubook-functions	dachubook.txt	/*dachubook-functions*
+dachubook-overview	dachubook.txt	/*dachubook-overview*
+dachubook.txt	dachubook.txt	/*dachubook.txt*
+g:dachubook_cmd	dachubook.txt	/*g:dachubook_cmd*
+g:dachubook_output	dachubook.txt	/*g:dachubook_output*
